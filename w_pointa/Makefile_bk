@@ -1,0 +1,27 @@
+CC		:= gcc
+INCLUDE := include
+INCLUDE += ../include
+DEST	:= bin
+PROGRAM := tst_w_pointa
+SRCDIR	:= src
+SRCS	:= $(wildcard $(SRCDIR)/*.c)
+OBJDIR	:= obj
+OBJS	:= $(addprefix $(OBJDIR)/,$(patsubst %.c,%.o,$(SRCS))))
+
+.PHONY: all clean
+all:	$(PROGRAM)
+
+$(PROGRAM):	$(OBJS)
+		$(CC) -o $(DEST)/$@ $^
+
+$(OBJS): $(SRCS)
+		@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
+		$(CC) -I $(INCLUDE) -o $@ -c $<
+
+clean:		
+		rm -rf obj/src
+		rm -f bin/* obj/*
+
+install:	$(PROGRAM)
+		install -s $(PROGRAM) $(DEST)
+
